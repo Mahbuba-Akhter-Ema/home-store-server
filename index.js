@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { query } = require('express');
 require('dotenv').config();
 const app = express();
 
@@ -50,6 +51,27 @@ async function run (){
             res.send(dinningRoomResults);
         }) 
 
+        // get seller 
+        app.get('/allSeller', async(req, res) => {
+            const query = {};
+            const result = await sellerCollection.find(query).toArray();
+            res.send(result)
+        })
+
+        // get Buyer 
+        app.get('/allBuyer', async(req, res) => {
+            const query = {};
+            const result = await buyerCollection.find(query).toArray();
+            res.send(result)
+        })
+
+        // getReport 
+        app.get('/allReport', async(req, res) => {
+            const query = {};
+            const result = await reportCollection.find(query).toArray();
+            res.send(result)
+        })
+
         app.post('/position', async (req, res) => {
             const user = req.body;
             console.log(user);
@@ -75,10 +97,26 @@ async function run (){
             res.send(booking)
         })
 
+        // report 
         app.post('/report', async (req, res) => {
             const reportData = req.body;
             const report = await reportCollection.insertOne(reportData)
             res.send(report)
+        })
+        // Delete seller 
+        app.delete('/sellerDelete/:id', async (req, res) => {
+            const id = req.params.id
+            const query = {_id:ObjectId(id)}
+            const deleteData = await sellerCollection.deleteOne(query)
+            res.send(deleteData)
+        })
+
+        // Delete Buyer
+        app.delete('/buyerDelete/:id', async (req, res) => {
+            const id = req.params.id
+            const query = {_id:ObjectId(id)}
+            const deleteData = await buyerCollection.deleteOne(query)
+            res.send(deleteData)
         })
                
     }
