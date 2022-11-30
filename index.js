@@ -25,6 +25,7 @@ async function run (){
         const addProductCollection = client.db('HomeStore').collection('addProduct')
         const sellerCollection = client.db('HomeStore').collection('Seller')
         const buyerCollection = client.db('HomeStore').collection('Buyer')
+        const bookingCollection = client.db('HomeStore').collection('booking')
 
         // bedroom 
         app.get('/bedRoom', async(req, res) => {
@@ -49,13 +50,13 @@ async function run (){
 
         app.post('/position', async (req, res) => {
             const user = req.body;
-
-            if (user.position === "Buyer") {
+            console.log(user);
+            if (user.select === "Buyer") {
                 const result = await buyerCollection.insertOne(user)
                 return res.send(result)
             }
 
-            if (user.position === "Seller") {
+            if (user.select === "Seller") {
                 const result = await sellerCollection.insertOne(user)
                 return res.send(result)
             }
@@ -63,6 +64,13 @@ async function run (){
             const result = await buyerCollection.insertOne(user)
             res.send(result)
 
+        })
+
+        // to post booking  
+        app.post('/booking', async (req, res) => {
+            const user=req.body;
+            const booking = await bookingCollection.insertOne(user)
+            res.send(booking)
         })
                
     }
