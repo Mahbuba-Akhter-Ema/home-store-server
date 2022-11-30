@@ -29,7 +29,12 @@ async function run (){
             const bedRoomResults = await Bedroom.find(query).toArray();
             res.send(bedRoomResults);
         })
-
+        // livingRoom 
+        app.get('/livingRoom', async(req, res) => {
+            const query = {};
+            const livingRoomResults = await livingRoomCollection.find(query).toArray();
+            res.send(livingRoomResults);
+        })
         
     }
     finally{
