@@ -5,34 +5,41 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config();
 const app = express();
 
-// midleware 
+// middleware 
 app.use(cors());
 app.use(express.json());
 
 
 
-const uri = `mongodb+srv://${process.env.DB_USER};:${process.env.DB_PASSWORD}@cluster0.trknobu.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.trknobu.mongodb.net/?retryWrites=true&w=majority`;
 // console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
-// BedRoom Data Collection MongoDB
+// Data Collection MongoDB
 async function run (){
     try{
-        const bedroomCollection = client.db('HomeStore').collection('Bedroom');
+        const Bedroom = client.db('HomeStore').collection('Bedroom');
+        const livingRoomCollection = client.db('HomeStore').collection('livingRoom');
+        const dinningRoomCollection = client.db('HomeStore').collection('dinningRoom');
 
-        app.get('/bedroom', async(req, res) => {
+        // bedroom 
+        app.get('/bedRoom', async(req, res) => {
             const query = {};
-            const results = await bedroomCollection.find(query).toArray();
-            res.send(results);
+            const bedRoomResults = await Bedroom.find(query).toArray();
+            res.send(bedRoomResults);
         })
+
+        
     }
     finally{
 
     }
 }
 
-run().catch(console.log);
+run().catch(error =>{
+    console.log(error);
+});
 
 
 
