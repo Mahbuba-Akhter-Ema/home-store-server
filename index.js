@@ -161,6 +161,45 @@ async function run() {
             res.send(deleteData)
         })
 
+        app.get('/getMyAddProduct', async (req, res)=>{
+            const email=req.query.email
+            const query={email: email}
+            const livingRoom=await livingRoomCollection.find(query).toArray()
+            const diningRoom=await dinningRoomCollection.find(query).toArray()
+            const bedRoom=await livingRoomCollection.find(query).toArray()
+            res.send([
+                livingRoom, diningRoom, bedRoom
+            ])
+        })
+
+        // delete my add product  
+        app.delete('/deleteMyAddProduct/:id', async (req, res) => {
+            const id=req.params.id;
+            const query={_id: ObjectId(id)}
+            const livingRoom=await livingRoomCollection.deleteOne(query)
+            const diningRoom=await dinningRoomCollection.deleteOne(query)
+            const bedRoom=await bookingCollection.deleteOne(query)
+            res.send(livingRoom || diningRoom || bedRoom)
+        })
+
+         // get admin role 
+         app.get('/buyer/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await buyerCollection.findOne(query);
+
+            res.send({ isAdmin: user?.role === "admin" });
+        })
+
+
+        app.get('/seller/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            const user = await sellerCollection.findOne(query)
+            res.send({ seller: user?.select === "Seller" })
+
+        })
+
     }
     finally {
 
